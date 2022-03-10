@@ -19,22 +19,27 @@
  */
 var lengthOfLongestSubstring = function (s) {
   let res = 0;
-  let start = 0; // 初始指针
-  let end = 0; // 末尾指针
-  const map = {}; // 记录当前元素的下标表
-
+  let l = 0; // 左节点
+  let r = 0; // 右节点
+  const map = {};
   const nums = s.split("");
-  while (end < nums.length) {
-    const element = nums[end]; // 当前元素
-    // 遇到重复选项
-    if (map[element] !== undefined && start <= map[element]) {
-      // 左边窗口边界重新赋值
-      start = map[element] + 1;
+
+  while (r < nums.length) {
+    const element = nums[r];
+    console.log(element, map);
+    // 同一起跑线 || map未记录此节点
+    if (l === r || map[element] === undefined) {
+      map[element] = r;
+      res = Math.max(res, r - l + 1);
+      r++;
+      continue;
     }
-    // 更新当前元素下标
-    map[element] = end;
-    res = Math.max(res, end - start + 1);
-    end++;
+    if (map[element] !== undefined) {
+      l = Math.max(l, map[element] + 1); // 移动左节点 !!!!!!!! 左边界不能往左走
+      map[element] = r;
+      res = Math.max(res, r - l + 1);
+      r++;
+    }
   }
 
   return res;
