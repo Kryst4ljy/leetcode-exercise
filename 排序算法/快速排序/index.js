@@ -10,11 +10,11 @@ function quickSort(arr, left, right) {
   let r = right;
 
   while (l < r) {
-    while (l < r && arr[r] > key) {
+    while (l < r && arr[r] >= key) {
       r--;
     }
     arr[l] = arr[r];
-    while (l < r && arr[l] < key) {
+    while (l < r && arr[l] <= key) {
       l++;
     }
     arr[r] = arr[l];
