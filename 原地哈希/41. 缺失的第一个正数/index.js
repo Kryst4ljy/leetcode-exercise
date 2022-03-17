@@ -4,10 +4,10 @@
  * 请你实现时间复杂度为 O(n) 并且只使用常数级别额外空间的解决方案。
  *
  * 解题思路：
- * 1. 把传入的数组当作一个 hash 表，依次遍历每一个数组元素。
- * 2. 判断当前遍历到的元素，如果 nums[0] 为边界值以外的数（0以及负数以及大于数组长度的正整数）或者 满足 hash 规则（nums[0] === 1，nums[1] === 2...），则跳过此次循环，指针后移进入下一个数。
- * 3. 不满足条件的，把此正整数放入对应的满足 hash 规则的下标中进行替换，比如当前 nums[0] === 9，nums[8] === 4，则替换两个数。指针不动进入下一次循环。
- * 4. 当遍历完一遍数组排完后，再依次查找每个下标上的元素是否对应其正整数值，遇到第一个不对应的就是当前缺失的第一个正整数。
+ * 1. 把传入的数组当作一个 map 表，依次遍历每一个数组元素。
+ * 2. 当遇到当前值小于 0 或者 大于数组长度的，进入下一个数。
+ * 3. 当遇到在整数区间内的数字，进行交换，如果 （当前值 === 下标 + 1），那么进入下一个数，如果不是则再去交换。
+ * 4. 遍历完毕后，依次查找下标元素， 当前值 未与 下标 + 1 匹配上的，就是缺失最小正整数。
  *
  *
  * 示例1：
@@ -20,30 +20,26 @@
  * @return {number}
  */
 var firstMissingPositive = function (nums) {
-  let res = undefined;
-  let key = 0; // 当前数组下标
-  let len = nums.length;
-
-  // 整理数组 0-1 1-2 2-3
-  while (key < len) {
-    if (nums[key] <= 0 || nums[key] > len || nums[key] === key + 1) {
-      key++;
-    } else {
-      const r_key = nums[key] - 1;
-      const sum = nums[r_key];
-      nums[r_key] = nums[key];
-      nums[key] = sum;
+  for (let i = 0; i < nums.length; i++) {
+    // 交换数字
+    while (true) {
+      // 当遇到当前值小于 0 或者 大于数组长度的，进入下一个数。
+      if (nums[i] <= 0 || nums[i] > nums.length || nums[i] === i + 1) break;
+      let key = nums[i] - 1;
+      let s = nums[key];
+      // 或者为当前值的 [1, 1] - 避免死循环
+      if (nums[i] === s) break;
+      nums[key] = nums[i];
+      nums[i] = s;
     }
   }
 
-  for (let i = 0; i < len; i++) {
-    if (nums[i] !== i + 1) {
-      res = i + 1;
-      break;
-    }
+  // 再次遍历，找到不匹配的数字
+  for (let i = 0; i < nums.length; i++) {
+    if (nums[i] !== i + 1) return i + 1;
   }
 
-  return res === undefined ? len + 1 : res;
+  return nums.length + 1;
 };
 
-console.log(firstMissingPositive([1, 2]));
+console.log(firstMissingPositive([1, 1]));
