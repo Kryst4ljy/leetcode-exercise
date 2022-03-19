@@ -6,7 +6,10 @@
  *
  * 解题思路：
  * 维护一个单调递增栈，记录长度。 🙅‍♂️
- * 动态规划
+ * 动态规划 - 未学习
+ * 
+ * 遍历数组中的每一个数，记录此时最长值为 1，然后向前遍历。
+ * 遇到比他大的直接跳过，遇到比他小的，从记录 map 中取出 j 的值 + 1 后，与自身存在 map 中的值对比，去较大值。
  *
  *
  * 示例：
@@ -20,29 +23,24 @@
  * @return {number}
  */
 var lengthOfLIS = function (nums) {
-  let res = 0;
-  let stack = []; // 单调递增栈
+  let res = 1;
+  let map = [];
 
   for (let i = 0; i < nums.length; i++) {
-    dfs(nums[i], i);
-  }
+    map[i] = 1;
 
-  function dfs(num, i) {
-    // 入栈
-    if (stack.length === 0 || stack[stack.length - 1] < num) {
-      stack.push(num);
-      res = Math.max(res, stack.length);
-      return;
-    }
-    // 遇到当前元素小于栈wei
-    if (stack[stack.length - 1] >= num) {
-      console.log("出栈", num);
-      stack.pop();
-      dfs(num);
+    for (j = i - 1; j >= 0; j--) {
+      // 遇到大于等于的 则跳过
+      if (nums[j] >= nums[i]) {
+        continue;
+      } else {
+        map[i] = Math.max(map[i], map[j] + 1);
+        res = Math.max(res, map[i]);
+      }
     }
   }
 
-  console.log(res);
+  return res;
 };
 
-console.log(lengthOfLIS([0, 1, 0, 3, 2, 3]));
+console.log(lengthOfLIS([10, 9, 2, 5, 3, 7, 101, 18]));
