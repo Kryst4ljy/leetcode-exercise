@@ -20,8 +20,9 @@
 /**
  * @param {number} n
  * @return {string[]}
+ * @description 第一个版本
  */
-var generateParenthesis = function (n) {
+var generateParenthesis1 = function (n) {
   let res = [];
   const path = [];
   const nums = ["(", ")"];
@@ -58,3 +59,45 @@ var generateParenthesis = function (n) {
 };
 
 console.log(generateParenthesis(2));
+
+/**
+ * @param {number} n
+ * @return {string[]}
+ * @description 第二个版本
+ */
+var generateParenthesis2 = function (n) {
+  let arr = ["(", ")"];
+  const path = [];
+  const res = [];
+  let l = 0; // 左括号记为 +1，
+  let r = 0; // 右括号记为 +1
+
+  dfs();
+  function dfs() {
+    // 若右括号比左括号多 或 左括号大于n 或 右括号大于n 跳出
+    if (r > l || l > n || r > n) {
+      return;
+    }
+    if (path.length === n * 2) {
+      res.push(path.join(""));
+      return;
+    }
+    for (let i = 0; i < arr.length; i++) {
+      path.push(arr[i]);
+      if (i === 0) {
+        l++;
+      } else {
+        r++;
+      }
+      dfs();
+      path.pop();
+      if (i === 0) {
+        l--;
+      } else {
+        r--;
+      }
+    }
+  }
+
+  return res;
+};
