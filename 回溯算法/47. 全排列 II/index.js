@@ -1,6 +1,11 @@
 /**
  * 47. 全排列 2
  * 给定一个可包含重复数字的序列 nums ，按任意顺序 返回所有不重复的全排列。
+ * 
+ * 
+ * 解题思路：
+ * 回溯 + 剪枝
+ * 剪枝：记录已经遍历过的层级，下一层不再遍历当前层级元素，就能避免重复遍历当前元素
  *
  * 示例1:
  * 输入：nums = [1,1,2]
@@ -12,56 +17,32 @@
  * @return {number[][]}
  */
 var permuteUnique = function (nums) {
-  let res = [];
+  const set = new Set();
   const path = [];
+  const deep = [];
 
-  const check = [...nums];
-  quickSort(check, 0, check.length - 1);
-  const checkStr = check.toString();
-  const set = [];
-
-  dfs(path);
-  function dfs(path) {
+  dfs(nums);
+  function dfs(arr) {
     if (path.length === nums.length) {
-      const pathStr = path.toString();
-      const nums = [...path];
-      quickSort(nums, 0, nums.length - 1);
-      if (checkStr === nums.toString() && !set.includes(pathStr)) {
-        set.push(pathStr);
-        res.push([...path]);
-      }
+      set.add(path.toString());
       return;
     }
-    for (let i = 0; i < nums.length; i++) {
-      path.push(nums[i]);
-      dfs(path);
+    for (let i = 0; i < arr.length; i++) {
+      if (deep.includes(i)) continue; // 层级
+      path.push(arr[i]);
+      deep.push(i);
+      dfs(arr);
       path.pop();
+      deep.pop();
     }
   }
 
-  function quickSort(arr, left, right) {
-    if (left >= right) return;
-    let key = arr[left];
-    let l = left;
-    let r = right;
-
-    while (l < r) {
-      while (l < r && arr[r] >= key) {
-        r--;
-      }
-      arr[l] = arr[r];
-      while (l < r && arr[l] <= key) {
-        l++;
-      }
-      arr[r] = arr[l];
-    }
-
-    arr[l] = key;
-    quickSort(arr, left, l);
-    quickSort(arr, l + 1, right);
+  const res = [];
+  for (let key of set) {
+    res.push(key.split(","));
   }
 
   return res;
 };
 
-console.log(permuteUnique([1, 1, 2]));
+console.log(permuteUnique([1, 1, 3]));
