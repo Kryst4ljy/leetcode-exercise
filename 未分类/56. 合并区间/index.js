@@ -4,8 +4,10 @@
  *
  *
  * 解题思路：
- * 前一个区间 1 与后一个区间 0 比较，如果小于则跳过。
- * 否则合并排序取头尾。
+ * 归并排序 + 前后区间对比
+ * 1. 归并排序，获得一个递增区间数组
+ * 2. 遍历数组，前一个区间的结尾与后一个区间的前面相比较，大于等于则合并区间，新区间结尾取两个区间的大值。
+ *
  *
  *
  * 示例：
@@ -19,54 +21,54 @@
  * @return {number[][]}
  */
 var merge = function (intervals) {
-  let l = 0;
-  let r = l + 1;
+  // 1. 排序
+  divide(intervals, 0, intervals.length - 1);
+  function divide(arr, left, right) {
+    if (left >= right) return;
+    let mid = Math.floor((right - left + 1) / 2) + left;
+    divide(arr, left, mid - 1);
+    divide(arr, mid, right);
+    cure(arr, left, mid, right);
+  }
+  function cure(arr, left, mid, right) {
+    const res = [];
+    let key1 = left;
+    let key2 = mid;
 
-  while (r < intervals.length && l >= 0) {
-    if (intervals[l][1] < intervals[r][0]) {
-      l++;
-      r = l + 1;
-    } else if (intervals[l][1] === intervals[r][0]) {
-      const bind = [intervals[l][0], intervals[r][1]];
-      intervals.splice(l, 2, bind);
-    } else if (
-      intervals[l][0] > intervals[r][0] &&
-      intervals[l][0] > intervals[r][1]
-    ) {
-      let s = intervals[l];
-      intervals[l] = intervals[r];
-      intervals[r] = s;
-      l++;
-      r = l + 1;
-    } else {
-      // 合并，排序。
-      const res = [];
-      let n = 0;
-      let m = 0;
-
-      while (n < 2 && m < 2) {
-        if (intervals[l][n] <= intervals[r][m]) {
-          res.push(intervals[l][n]);
-          n++;
-        } else {
-          res.push(intervals[r][m]);
-          m++;
-        }
+    for (let i = 0; i < right - left + 1; i++) {
+      if (key1 >= mid) {
+        res[i] = arr[key2++];
+        continue;
       }
-      const bind = [res[0]];
-      if (n === 2) {
-        bind.push(intervals[r][1]);
+      if (key2 > right) {
+        res[i] = arr[key1++];
+        continue;
+      }
+      if (arr[key1][0] >= arr[key2][0]) {
+        res[i] = arr[key2++];
       } else {
-        bind.push(intervals[l][1]);
+        res[i] = arr[key1++];
       }
-      console.log(bind);
-      intervals.splice(l, 2, bind);
-      l--;
-      r = l + 1;
+    }
+
+    for (let i = 0; i < res.length; i++) {
+      arr[i + left] = res[i];
     }
   }
 
-  return intervals;
+  // 2. 合并区间
+  const res = [intervals[0]];
+  let index = 0;
+  for (let i = 1; i < intervals.length; i++) {
+    if (res[index][1] >= intervals[i][0]) {
+      res[index][1] = Math.max(intervals[i][1], res[index][1]);
+      continue;
+    }
+    res.push(intervals[i]);
+    index++;
+  }
+
+  return res;
 };
 
 console.log(
