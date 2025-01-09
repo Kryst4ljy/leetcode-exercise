@@ -4,6 +4,7 @@
   "description": "leetcode刷题",
   "main": "index.js",
   "scripts": {
+    "catch": "node ./catchPage/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -17,8 +18,8 @@
     "url": "https://github.com/Kryst4ljy/leetcode-exercise/issues"
   },
   "homepage": "https://github.com/Kryst4ljy/leetcode-exercise#readme",
-  "devDependencies": {},
   "dependencies": {
-    "k-datastructures": "^1.0.7"
+    "k-datastructures": "^1.0.7",
+    "puppeteer": "^23.11.1"
   }
 }
