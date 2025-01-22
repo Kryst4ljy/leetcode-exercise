@@ -70,9 +70,11 @@ var minimumSubarrayLength = function (nums, k) {
     }
 
     for (let j = i + 1; j < nums.length; j++) {
+      if (j - i + 1 >= res) break;
       sum |= nums[j];
       if (sum >= k) {
         res = Math.min(res, j - i + 1);
+        break;
       }
     }
   }
