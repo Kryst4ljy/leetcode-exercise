@@ -1,22 +1,29 @@
-var nums = [1, 1, 2, 2];
-var res = [[]];
-var map = {};
+var arr = [1, 2, 3];
 
-function dfs(prev, index) {
-  if (index >= nums.length) return;
+/**
+ * @param {number[]} nums
+ * @return {number[][]}
+ */
+var permuteUnique = function (nums) {
+  var max = nums.length;
+  var res = [];
 
-  const current = [...prev, nums[index]];
-  const tag = current.join('');
-  if (!map[tag]) {
-    map[tag] = 1;
-    console.log(current);
+  dfs(1, [], []);
+
+  function dfs(deep, indexs, source) {
+    if (deep > max) {
+      res.push(source);
+      return;
+    }
+
+    for (let i = 0; i < nums.length; i++) {
+      if (!indexs.includes(i)) {
+        dfs(deep + 1, [...indexs, i], [...source, nums[i]]);
+      }
+    }
   }
 
-  for (let i = index + 1; i < nums.length; i++) {
-    dfs(current, i);
-  }
-}
+  return res;
+};
 
-for (let i = 0; i < nums.length; i++) {
-  dfs([], i);
-}
+console.log(permuteUnique(arr));
