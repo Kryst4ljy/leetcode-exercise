@@ -1,42 +1,40 @@
 /**
- * @param {number[][]} arrays
- * @return {number}
+ * @param {number} n
+ * @return {number[]}
  */
-var maxDistance = function (arrays) {
-  let min = arrays[0][0];
-  let max = arrays[0][arrays[0].length - 1];
-  let res = 0;
+var evenOddBit = function (n) {
+  let even = 0;
+  let odd = 0;
+  let tag = 'even';
 
-  for (let i = 1; i < arrays.length; i++) {
-    const curMax = arrays[i][arrays[i].length - 1];
-    const curMin = arrays[i][0];
-
-    res = Math.max(res, Math.abs(curMax - min), Math.abs(max - curMin));
-
-    if (curMax > max) {
-      max = curMax;
+  let current = n;
+  while (current > 1) {
+    const left = current % 2;
+    if (tag === 'even') {
+      left === 1 && even++;
+      tag = 'odd';
+    } else {
+      left === 1 && odd++;
+      tag = 'even';
     }
-    if (curMin < min) {
-      min = curMin;
+
+    if (left === 1) {
+      current = (current - 1) / 2;
+    } else {
+      current = current / 2;
     }
   }
 
-  return res;
+  if (current === 1) {
+    if (tag === 'even') {
+      even++;
+    } else {
+      odd++;
+    }
+  }
+
+  return [even, odd];
 };
 
-console.log(
-  maxDistance([
-    [1, 2, 3],
-    [4, 5],
-    [1, 2, 3],
-  ])
-);
-console.log(maxDistance([[1], [1]]));
-console.log(maxDistance([[1], [2]]));
-console.log(
-  maxDistance([
-    [1, 4],
-    [0, 5],
-  ])
-);
-console.log(maxDistance([[-8, -7, -7, -5, 1, 1, 3, 4], [-2], [-10, -10, -7, 0, 1, 3], [2]]));
+console.log(evenOddBit(50));
+console.log(evenOddBit(2));
