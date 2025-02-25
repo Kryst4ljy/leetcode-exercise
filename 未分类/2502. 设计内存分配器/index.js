@@ -1,4 +1,6 @@
 /**
+ * 2502. 设计内存分配器
+ * 
  * 给你一个整数 n ，表示下标从 0 开始的内存数组的大小。所有内存单元开始都是空闲的。
 
 请你设计一个具备以下功能的内存分配器：
@@ -103,7 +105,7 @@ Allocator.prototype.freeMemory = function (mID) {
       this.source[i] = undefined;
     }
   }
-  
+
   return res;
 };
 
